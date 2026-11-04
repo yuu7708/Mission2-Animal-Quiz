@@ -1,4 +1,3 @@
-
 import json
 import os
 
@@ -163,6 +162,41 @@ class QuizGame:
 
         print(f"\n총 {len(self.quizzes)}개의 퀴즈가 있습니다.")
 
+    def delete_quiz(self):
+        print("\n===== 퀴즈 삭제 =====")
+
+        if not self.quizzes:
+            print("삭제할 퀴즈가 없습니다.")
+            return
+
+        self.show_quizzes()
+
+        while True:
+            choice = input("\n삭제할 퀴즈 번호를 입력하세요 (취소: 0): ").strip()
+
+            if choice == "0":
+                print("퀴즈 삭제를 취소했습니다.")
+                return
+
+            if choice.isdigit() and 1 <= int(choice) <= len(self.quizzes):
+                break
+
+            print("목록에 있는 번호를 입력해 주세요.")
+
+        index = int(choice) - 1
+        question = self.quizzes[index]["question"]
+
+        print(f"\n삭제할 문제: {question}")
+
+        confirm = input("정말 삭제할까요? (y/n): ").strip().lower()
+
+        if confirm == "y":
+            self.quizzes.pop(index)
+            self.save_data()
+            print("퀴즈가 삭제되었습니다!")
+        else:
+            print("퀴즈 삭제를 취소했습니다.")
+
     def show_high_score(self):
         print("\n===== 최고 점수 =====")
         print(f"최고 점수: {self.high_score}점")
@@ -174,7 +208,8 @@ class QuizGame:
             print("2. 퀴즈 추가")
             print("3. 퀴즈 목록")
             print("4. 최고 점수 보기")
-            print("5. 종료")
+            print("5. 퀴즈 삭제")
+            print("6. 종료")
 
             choice = input("메뉴를 선택하세요: ").strip()
 
@@ -187,10 +222,12 @@ class QuizGame:
             elif choice == "4":
                 self.show_high_score()
             elif choice == "5":
+                self.delete_quiz()
+            elif choice == "6":
                 print("퀴즈 게임을 종료합니다!")
                 break
             else:
-                print("1~5 사이의 번호를 입력해 주세요.")
+                print("1~6 사이의 번호를 입력해 주세요.")
 
 
 if __name__ == "__main__":
