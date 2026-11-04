@@ -114,6 +114,13 @@ class QuizGame:
         accuracy = score / len(self.quizzes) * 100
         print(f"정답률: {accuracy:.1f}%")
 
+        if accuracy == 100:
+            print("완벽해요!")
+        elif accuracy >= 80:
+            print("정말 잘했어요!")
+        else:
+            print("조금 더 연습해 봐요!")
+
         if score > self.high_score:
             self.high_score = score
             self.save_data()
