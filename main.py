@@ -111,6 +111,9 @@ class QuizGame:
 
         print(f"\n최종 점수: {score}/{len(self.quizzes)}")
 
+        accuracy = score / len(self.quizzes) * 100
+        print(f"정답률: {accuracy:.1f}%")
+
         if score > self.high_score:
             self.high_score = score
             self.save_data()
@@ -209,6 +212,7 @@ class QuizGame:
     def show_high_score(self):
         print("\n===== 최고 점수 =====")
         print(f"최고 점수: {self.high_score}점")
+        
 
     def show_menu(self):
         while True:
