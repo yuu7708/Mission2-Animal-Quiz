@@ -134,7 +134,10 @@ class QuizGame:
                 choice = input(f"{i}번 선택지를 입력하세요: ").strip()
 
             choices.append(choice)
-
+            if choice in choices:
+                print("이미 입력한 선택지입니다. 다른 내용을 입력해 주세요.")
+                choices.pop()
+                continue
         while True:
             answer = input("정답 번호를 입력하세요 (1~4): ").strip()
 
