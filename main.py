@@ -107,6 +107,7 @@ class QuizGame:
                 score += 1
             else:
                 print("아쉽지만 오답입니다.")
+                print(f"정답은 {quiz.answer}번: {quiz.choices[int(quiz.answer) - 1]}입니다.")
 
         print(f"\n최종 점수: {score}/{len(self.quizzes)}")
 
