@@ -142,7 +142,10 @@ class QuizGame:
                 break
 
             print("1~4 사이의 번호를 입력해 주세요.")
-
+        for quiz in self.quizzes:
+            if quiz["question"] == question:
+                print("이미 등록된 문제입니다.")
+                return
         new_quiz = Quiz(question, answer, choices)
 
         self.quizzes.append(new_quiz.to_dict())
