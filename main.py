@@ -127,17 +127,19 @@ class QuizGame:
         choices = []
 
         for i in range(1, 5):
-            choice = input(f"{i}번 선택지를 입력하세요: ").strip()
-
-            while not choice:
-                print("선택지는 비워둘 수 없습니다.")
+            while True:
                 choice = input(f"{i}번 선택지를 입력하세요: ").strip()
 
-            choices.append(choice)
-            if choice in choices:
-                print("이미 입력한 선택지입니다. 다른 내용을 입력해 주세요.")
-                choices.pop()
-                continue
+                if not choice:
+                    print("선택지는 비워둘 수 없습니다.")
+                    continue
+
+                if choice in choices:
+                    print("이미 입력한 선택지입니다. 다른 내용을 입력해 주세요.")
+                    continue
+
+                choices.append(choice)
+                break
         while True:
             answer = input("정답 번호를 입력하세요 (1~4): ").strip()
 
