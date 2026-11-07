@@ -85,7 +85,7 @@ class QuizGame:
 
                 # 백업 파일로 복구했다면 원본 파일을 복원합니다.
                 if filename == backup_filename:
-                    os.replace(backup_filename, self.filename)
+                    shutil.copy2(backup_filename, self.filename)
                     print("백업 파일에서 데이터를 복구했습니다.")
 
                 break
@@ -140,27 +140,25 @@ class QuizGame:
         backup_filename = self.filename + ".bak"
 
         try:
-            # 먼저 임시 파일에 새 데이터를 기록합니다.
             with open(temp_filename, "w", encoding="utf-8") as file:
                 json.dump(data, file, ensure_ascii=False, indent=4)
 
-            # 기존 파일이 있다면 백업 파일로 복사합니다.
             if os.path.exists(self.filename):
                 shutil.copy2(self.filename, backup_filename)
 
-            # 임시 파일을 원본 파일로 교체합니다.
             os.replace(temp_filename, self.filename)
+            return True
 
         except (OSError, TypeError, ValueError):
             print("데이터 저장에 실패했습니다. 저장 공간과 파일 권한을 확인해 주세요.")
 
-            # 저장 실패 시 남은 임시 파일을 정리합니다.
             if os.path.exists(temp_filename):
                 try:
                     os.remove(temp_filename)
                 except OSError:
                     pass
 
+            return False
 
     def play_quiz(self):
         if not self.quizzes:
@@ -210,8 +208,10 @@ class QuizGame:
 
         if score > self.high_score:
             self.high_score = score
-            self.save_data()
-            print("최고 점수가 갱신되었습니다!")
+            if self.save_data():
+                print("최고 점수가 갱신되었습니다!")
+            else:
+                print("최고 점수는 변경했지만 파일에 저장하지 못했습니다.")
 
     def add_quiz(self):
         print("\n===== 새 퀴즈 추가 =====")
@@ -252,10 +252,11 @@ class QuizGame:
         new_quiz = Quiz(question, answer, choices)
 
         self.quizzes.append(new_quiz.to_dict())
-        self.save_data()
 
-        print("새 퀴즈가 저장되었습니다!")
-
+        if self.save_data():
+            print("새 퀴즈가 저장되었습니다!")
+        else:
+            print("퀴즈는 추가했지만 파일에 저장하지 못했습니다.")
     def show_quizzes(self):
         print("\n===== 퀴즈 목록 =====")
 
@@ -298,8 +299,10 @@ class QuizGame:
 
         if confirm == "y":
             self.quizzes.pop(index)
-            self.save_data()
-            print("퀴즈가 삭제되었습니다!")
+            if self.save_data():
+                print("퀴즈가 삭제되었습니다!")
+            else:
+                print("퀴즈는 삭제했지만 파일에 저장하지 못했습니다.")
         else:
             print("퀴즈 삭제를 취소했습니다.")
 

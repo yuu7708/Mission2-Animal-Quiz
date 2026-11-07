@@ -219,6 +219,8 @@ https://github.com/yuu7708/Mission2-Animal-Quiz
 | `24a2460` | 점수별 격려 메시지 추가 |
 | `aa808ea` | README 내용 업데이트 |
 | `a35c07f` | JSON 저장 데이터 검증 기능 강화 |
+| `0740d5f` | 데이터 백업 및 복구 기능 추가 |
+총 13개의 커밋을 통해 기본 기능 구현부터 입력 검증, 사용자 편의 기능, 데이터 보호 기능까지 단계적으로 개선하였다.
 
 ### 커밋 작성 기준
 
@@ -258,6 +260,34 @@ git checkout main
 git merge feature/quiz-improvement
 ```
 
+### 실제 브랜치 작업 및 병합 확인 기록
+
+다음은 실제 Git 저장소에서 확인한 브랜치 및 커밋 기록이다.
+
+- 작업 브랜치: `feature/quiz-improvement`
+- 작업 브랜치에서 생성한 커밋: `4b01eb6`
+- 커밋 내용: README에 퀴즈 삭제 기능 설명 추가
+- 해당 커밋은 이후 `main` 브랜치의 커밋 기록에도 포함되었다.
+- 현재 원격 저장소에는 `origin/feature/quiz-improvement` 브랜치가 남아 있다.
+
+실제 Git 기록 확인 명령어:
+
+```bash
+git log --graph --oneline --decorate --all
+git branch -a
+```
+
+확인한 기록:
+
+```text
+* 0740d5f (HEAD -> main, origin/main, origin/HEAD) 데이터 백업 및 복구 기능 추가
+...
+* 4b01eb6 (origin/feature/quiz-improvement) README에 퀴즈 삭제 기능 설명 추가
+...
+```
+
+이를 통해 기능 개선 커밋이 `main` 브랜치에도 반영된 것을 확인할 수 있다.
+
 ## 13. Git clone 및 pull 실습
 
 원격 저장소의 프로젝트를 다른 폴더에 복제하는 `clone`과, 원격 저장소의 최신 변경 사항을 가져오는 `pull`을 실습했습니다.
@@ -275,6 +305,32 @@ git pull origin main
 ```
 
 실습 과정에서 `Already up to date.` 메시지를 확인하여 원격 저장소와 로컬 저장소가 동기화되어 있음을 확인했습니다.
+
+### 실습 결과
+
+GitHub 저장소를 별도 폴더에 복제하고 원격 저장소의 변경 사항을 가져오는 실습을 진행했습니다.
+
+```text
+git clone https://github.com/yuu7708/Mission2-Animal-Quiz.git ..\Mission2-Animal-Quiz-clone
+
+Receiving objects: 100% (44/44), done.
+Resolving deltas: 100% (21/21), done.
+
+git -C ..\Mission2-Animal-Quiz-clone pull origin main
+
+Already up to date.
+
+git -C ..\Mission2-Animal-Quiz-clone status
+
+On branch main
+Your branch is up to date with 'origin/main'.
+
+nothing to commit, working tree clean
+
+git -C ..\Mission2-Animal-Quiz-clone log -1 --oneline
+
+0740d5f 데이터 백업 및 복구 기능 추가
+```
 
 ## 14. 요구사항 변경 시 영향도
 
@@ -296,8 +352,16 @@ git pull origin main
 
 ## 15. 향후 개선 사항
 
-- JSON 파일 저장 실패에 대한 별도 예외 처리
-- 자동 백업 파일 생성 기능
-- 손상된 JSON 파일의 백업 복구 기능
-- 데이터가 많아질 경우 데이터베이스 사용 검토
-- 실행 및 테스트 결과를 README에 캡처로 추가
+### 현재 구현된 데이터 보호 기능
+
+- JSON 파일 저장 실패 시 예외 처리
+- 기존 데이터를 `state.json.bak` 파일로 자동 백업
+- 원본 파일을 읽을 수 없을 때 백업 파일에서 복구
+- `state.json.tmp` 임시 파일에 먼저 기록한 뒤 원본 파일과 교체하여 데이터 손상 위험 감소
+
+### 향후 개선할 사항
+
+- 데이터가 많아지면 SQLite 등 데이터베이스 사용 검토
+- 자동 테스트 코드 추가
+- 다양한 예외 상황에 대한 테스트 확대
+- 실행 및 테스트 결과를 README에 기록하여 검증 과정 보강
