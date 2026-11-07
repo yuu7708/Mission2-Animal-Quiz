@@ -23,48 +23,83 @@ class QuizGame:
         self.filename = "state.json"
 
     def load_data(self):
-        if os.path.exists(self.filename):
-            try:
-                with open(self.filename, "r", encoding="utf-8") as file:
-                    data = json.load(file)
+     if os.path.exists(self.filename):
+        try:
+            with open(self.filename, "r", encoding="utf-8") as file:
+                data = json.load(file)
 
-                self.high_score = data.get("high_score", 0)
-                self.quizzes = data.get("quizzes", [])
+            if not isinstance(data, dict):
+                raise ValueError("저장 데이터 형식이 올바르지 않습니다.")
 
-            except (json.JSONDecodeError, OSError, AttributeError):
-                print("저장 파일을 읽을 수 없어 기본 퀴즈를 불러옵니다.")
-                self.quizzes = []
+            self.high_score = data.get("high_score", 0)
+
+            if not isinstance(self.high_score, int) or isinstance(self.high_score, bool) or self.high_score < 0:
                 self.high_score = 0
 
+            saved_quizzes = data.get("quizzes", [])
+
+            if not isinstance(saved_quizzes, list):
+                raise ValueError("퀴즈 목록 형식이 올바르지 않습니다.")
+
+            self.quizzes = []
+
+            for quiz in saved_quizzes:
+                if not isinstance(quiz, dict):
+                    continue
+
+                question = quiz.get("question")
+                choices = quiz.get("choices")
+                answer = str(quiz.get("answer", ""))
+
+                if (
+                    isinstance(question, str)
+                    and question.strip()
+                    and isinstance(choices, list)
+                    and len(choices) >= 2
+                    and all(isinstance(choice, str) and choice.strip() for choice in choices)
+                    and answer.isdigit()
+                    and 1 <= int(answer) <= len(choices)
+                ):
+                    self.quizzes.append({
+                        "question": question,
+                        "choices": choices,
+                        "answer": answer
+                    })
+
+        except (json.JSONDecodeError, OSError, AttributeError, ValueError):
+            print("저장 파일을 읽을 수 없어 기본 퀴즈를 불러옵니다.")
+            self.quizzes = []
+            self.high_score = 0
+
         if not self.quizzes:
-            self.quizzes = [
-                {
-                    "question": "강아지가 꼬리를 흔드는 행동은 무엇을 표현할까요?",
-                    "choices": ["기쁨이나 흥분", "배고픔", "졸음", "추위"],
-                    "answer": "1"
-                },
-                {
-                    "question": "고양이가 기분 좋을 때 내는 소리는?",
-                    "choices": ["멍멍", "골골송", "짹짹", "꿀꿀"],
-                    "answer": "2"
-                },
-                {
-                    "question": "토끼가 좋아하는 먹이로 잘 알려진 것은?",
-                    "choices": ["초콜릿", "사탕", "건초", "과자"],
-                    "answer": "3"
-                },
-                {
-                    "question": "햄스터가 먹이를 저장하는 신체 부위는?",
-                    "choices": ["볼주머니", "꼬리", "귀", "발"],
-                    "answer": "1"
-                },
-                {
-                    "question": "펭귄은 주로 어디에서 생활할까요?",
-                    "choices": ["사막", "바다와 해안", "나무 위", "동굴 속"],
-                    "answer": "2"
-                }
-            ]
-            self.save_data()
+         self.quizzes = [
+            {
+                "question": "강아지가 꼬리를 흔드는 행동은 무엇을 표현할까요?",
+                "choices": ["기쁨이나 흥분", "배고픔", "졸음", "추위"],
+                "answer": "1"
+            },
+            {
+                "question": "고양이가 기분 좋을 때 내는 소리는?",
+                "choices": ["멍멍", "골골송", "짹짹", "꿀꿀"],
+                "answer": "2"
+            },
+            {
+                "question": "토끼가 좋아하는 먹이로 잘 알려진 것은?",
+                "choices": ["초콜릿", "사탕", "건초", "과자"],
+                "answer": "3"
+            },
+            {
+                "question": "햄스터가 먹이를 저장하는 신체 부위는?",
+                "choices": ["볼주머니", "꼬리", "귀", "발"],
+                "answer": "1"
+            },
+            {
+                "question": "펭귄은 주로 어디에서 생활할까요?",
+                "choices": ["사막", "바다와 해안", "나무 위", "동굴 속"],
+                "answer": "2"
+            }
+        ]
+         self.save_data()
 
     def save_data(self):
         data = {
