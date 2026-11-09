@@ -37,20 +37,19 @@ class QuizGame:
                 if not isinstance(data, dict):
                     raise ValueError("저장 데이터 형식이 올바르지 않습니다.")
 
-                high_score = data.get("high_score", 0)
+         high_score = data.get("high_score")
 
-                if (
-                    not isinstance(high_score, int)
-                    or isinstance(high_score, bool)
-                    or high_score < 0
-                ):
-                    high_score = 0
+            if (
+                not isinstance(high_score, int)
+                or isinstance(high_score, bool)
+                or high_score < 0
+            ):
+                raise ValueError("최고 점수 데이터가 올바르지 않습니다.")
 
-                saved_quizzes = data.get("quizzes", [])
+            saved_quizzes = data.get("quizzes")
 
-                if not isinstance(saved_quizzes, list):
-                    raise ValueError("퀴즈 목록 형식이 올바르지 않습니다.")
-
+            if not isinstance(saved_quizzes, list):
+                raise ValueError("퀴즈 목록 형식이 올바르지 않습니다.")
                 valid_quizzes = []
 
                 for quiz in saved_quizzes:
