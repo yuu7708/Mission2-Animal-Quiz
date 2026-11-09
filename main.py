@@ -58,17 +58,19 @@ class QuizGame:
 
                     question = quiz.get("question")
                     choices = quiz.get("choices")
-                    answer = str(quiz.get("answer", ""))
+                    answer = quiz.get("answer")
 
                     if (
                         isinstance(question, str)
                         and question.strip()
                         and isinstance(choices, list)
-                        and len(choices) >= 2
+                        and len(choices) == 4
                         and all(
                             isinstance(choice, str) and choice.strip()
                             for choice in choices
                         )
+                        and len(set(choices)) == 4
+                        and isinstance(answer, str)
                         and answer.isdigit()
                         and 1 <= int(answer) <= len(choices)
                     ):
@@ -212,6 +214,7 @@ class QuizGame:
             else:
                 print("최고 점수는 변경했지만 파일에 저장하지 못했습니다.")
 
+    
     def add_quiz(self):
         print("\n===== 새 퀴즈 추가 =====")
 
@@ -220,6 +223,17 @@ class QuizGame:
         while not question:
             print("문제는 비워둘 수 없습니다.")
             question = input("문제를 입력하세요: ").strip()
+
+        normalized_question = " ".join(question.split()).casefold()
+
+        for quiz in self.quizzes:
+            existing_question = " ".join(
+                quiz["question"].split()
+            ).casefold()
+
+            if existing_question == normalized_question:
+                print("이미 등록된 문제입니다.")
+                return
 
         choices = []
 
@@ -237,6 +251,7 @@ class QuizGame:
 
                 choices.append(choice)
                 break
+
         while True:
             answer = input("정답 번호를 입력하세요 (1~4): ").strip()
 
@@ -244,18 +259,15 @@ class QuizGame:
                 break
 
             print("1~4 사이의 번호를 입력해 주세요.")
-        for quiz in self.quizzes:
-            if quiz["question"] == question:
-                print("이미 등록된 문제입니다.")
-                return
-        new_quiz = Quiz(question, answer, choices)
 
+        new_quiz = Quiz(question, answer, choices)
         self.quizzes.append(new_quiz.to_dict())
 
         if self.save_data():
             print("새 퀴즈가 저장되었습니다!")
         else:
             print("퀴즈는 추가했지만 파일에 저장하지 못했습니다.")
+
     def show_quizzes(self):
         print("\n===== 퀴즈 목록 =====")
 
