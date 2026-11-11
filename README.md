@@ -388,3 +388,34 @@ git -C ..\Mission2-Animal-Quiz-clone log -1 --oneline
 ## Git clone 및 pull 실행 증빙
 
 ![Git clone 및 pull 실행 화면](screenshots/pull.png.png)
+
+
+## 실행 및 입력 검증 증빙
+
+### 게임 실행 화면
+![게임 실행 화면](screenshots/game-run.png)
+
+### 잘못된 메뉴 입력 처리
+![잘못된 입력 처리](screenshots/input-validation.png)
+
+## 자동 테스트
+
+Python unittest를 사용한 자동 테스트 실행 명령어:
+
+```powershell
+py -m unittest -v
+```
+
+테스트 항목:
+- 퀴즈 객체의 데이터 변환 확인
+- JSON 데이터 저장 및 불러오기 확인
+- 잘못된 퀴즈 데이터 제외 확인
+
+## 데이터 저장 및 백업·복구
+
+- 게임 데이터는 `state.json` 파일에 저장합니다.
+- 저장 시 임시 파일 `state.json.tmp`에 먼저 기록합니다.
+- 기존 데이터 파일은 `state.json.bak`으로 백업합니다.
+- 원본 파일을 읽을 수 없으면 백업 파일로 복구합니다.
+- 원본과 백업 파일 모두 사용할 수 없으면 기본 퀴즈 데이터를 불러옵니다.
+- 퀴즈와 최고 점수는 JSON 파일로 저장하고 다시 불러옵니다.
