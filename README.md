@@ -384,3 +384,7 @@ git -C ..\Mission2-Animal-Quiz-clone log -1 --oneline
 - 자동 테스트 코드 추가
 - 다양한 예외 상황에 대한 테스트 확대
 - 실행 및 테스트 결과를 README에 기록하여 검증 과정 보강
+
+## Git clone 및 pull 실행 증빙
+
+![Git clone 및 pull 실행 화면](screenshots/pull.png.png)
